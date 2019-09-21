@@ -5,8 +5,10 @@ const int LED_P_ROUGE = 8;
 const int LED_P_VERT = 9;
 const int SWITCH = 3;
 
+volatile int redDelay;
+volatile int greenDelay;
+
 void setup() {
-  // put your setup code here, to run once:
   pinMode(LED_ROUGE, OUTPUT);
   pinMode(LED_ORANGE, OUTPUT);
   pinMode(LED_VERT, OUTPUT);
@@ -15,25 +17,31 @@ void setup() {
   pinMode(LED_P_VERT, OUTPUT);
 
   pinMode(SWITCH, INPUT);
+  attachInterrupt(digitalPinToInterrupt(SWITCH), switchTrigger, RISING);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  
+  greenDelay = 3000;
+  redDelay = 3000;
+    
   digitalWrite(LED_VERT, HIGH);
-  delay(3000);
+  digitalWrite(LED_P_ROUGE, HIGH);
+  delay(greenDelay);
   digitalWrite(LED_VERT, LOW);
   
   digitalWrite(LED_ORANGE, HIGH);
   delay(1000);
   digitalWrite(LED_ORANGE, LOW);
+  digitalWrite(LED_P_ROUGE, LOW);
   
   digitalWrite(LED_ROUGE, HIGH);
-  int totalDelay = 0;
-  while(digitalRead(SWITCH) == 0 || totalDelay < 3000){
-    delay(50);
-  }
+  digitalWrite(LED_P_VERT, HIGH);
+  delay(redDelay);
   digitalWrite(LED_ROUGE, LOW);
+  digitalWrite(LED_P_VERT, LOW);  
+}
 
-  
+void switchTrigger(){
+  greenDelay = 0;
+  redDelay = 5000;
 }
