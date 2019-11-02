@@ -5,10 +5,12 @@ const int LED_P_ROUGE = 8;
 const int LED_P_VERT = 9;
 const int SWITCH = 3;
 
-volatile int redDelay;
-volatile int greenDelay;
+int redDelay = 3000;
+int greenDelay = 3000;
+bool swState = LOW;
 
 void setup() {
+  Serial.begin(9600);
   pinMode(LED_ROUGE, OUTPUT);
   pinMode(LED_ORANGE, OUTPUT);
   pinMode(LED_VERT, OUTPUT);
@@ -17,16 +19,24 @@ void setup() {
   pinMode(LED_P_VERT, OUTPUT);
 
   pinMode(SWITCH, INPUT);
-  attachInterrupt(digitalPinToInterrupt(SWITCH), switchTrigger, RISING);
 }
 
 void loop() {
-  greenDelay = 3000;
+
   redDelay = 3000;
-    
+  //greenDelay = 3000;
+
   digitalWrite(LED_VERT, HIGH);
   digitalWrite(LED_P_ROUGE, HIGH);
-  delay(greenDelay);
+  int totalDelay = 0;
+  do{
+    delay(50);
+    if (digitalRead(SWITCH == HIGH)){
+      redDelay = 5000;
+    }
+    totalDelay += 50;
+  }
+  while (digitalRead(SWITCH) == LOW && totalDelay < 3000);
   digitalWrite(LED_VERT, LOW);
   
   digitalWrite(LED_ORANGE, HIGH);
@@ -39,9 +49,4 @@ void loop() {
   delay(redDelay);
   digitalWrite(LED_ROUGE, LOW);
   digitalWrite(LED_P_VERT, LOW);  
-}
-
-void switchTrigger(){
-  greenDelay = 0;
-  redDelay = 5000;
 }
